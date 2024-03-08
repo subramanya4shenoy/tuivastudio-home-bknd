@@ -5,11 +5,20 @@ const app = express();
 const cors = require("cors");
 const port = 3001;
 
+const allowedOrigins = ["http://localhost:3000", "https://tuivastudio.com"];
+
 const corsOptions = {
-  origin: "http://localhost:3000", // restrict calls to those this address
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-  credentials: true, // required to pass
+  credentials: true,
 };
+
 
 app.use(cors(corsOptions));
 app.use(bodyParser.json());
